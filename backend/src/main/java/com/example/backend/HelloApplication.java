@@ -1,9 +1,12 @@
 package com.example.backend;
 
 import com.example.backend.entities.LogInOut;
-import com.example.backend.repositories.LogInOutRepository;
-import com.example.backend.repositories.MySqlLogInOutRepository;
+import com.example.backend.entities.Registration;
+import com.example.backend.entities.TransactionEvent;
+import com.example.backend.repositories.*;
 import com.example.backend.services.LogInOutService;
+import com.example.backend.services.RegistrationService;
+import com.example.backend.services.TransactionService;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +30,8 @@ import java.util.List;
 public class HelloApplication extends ResourceConfig {
 
     private static List<LogInOut> logInOuts = new ArrayList<>();
+    private static List<Registration> registrations = new ArrayList<>();
+    private static  List<TransactionEvent> transactions = new ArrayList<>();
 
     public HelloApplication(){
         AbstractBinder abstractBinder = new AbstractBinder() {
@@ -34,8 +39,12 @@ public class HelloApplication extends ResourceConfig {
             protected void configure() {
 
                 this.bind(MySqlLogInOutRepository.class).to(LogInOutRepository.class).in(Singleton.class);
+                this.bind(MySqlRegistrationRepository.class).to(RegistrationRepository.class).in(Singleton.class);
+                this.bind(MySqlTransactionRepository.class).to(TransactionRepository.class).in(Singleton.class);
 
                 this.bindAsContract(LogInOutService.class);
+                this.bindAsContract(RegistrationService.class);
+                this.bindAsContract(TransactionService.class);
             }
         };
 
@@ -62,6 +71,28 @@ public class HelloApplication extends ResourceConfig {
         Transaction tx = session.beginTransaction();
         for (LogInOut logInOut: logInOuts){
             session.save(logInOut);
+        }
+        tx.commit();
+
+        //Registration
+        con = new Configuration().configure().addAnnotatedClass(Registration.class);
+        reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry();
+        sf = con.buildSessionFactory(reg);
+        session = sf.openSession();
+        tx = session.beginTransaction();
+        for (Registration registration: registrations){
+            session.save(registration);
+        }
+        tx.commit();
+
+        //Transaction
+        con = new Configuration().configure().addAnnotatedClass(TransactionEvent.class);
+        reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry();
+        sf = con.buildSessionFactory(reg);
+        session = sf.openSession();
+        tx = session.beginTransaction();
+        for (TransactionEvent transactionEvent: transactions){
+            session.save(transactionEvent);
         }
         tx.commit();
     }
@@ -92,6 +123,20 @@ public class HelloApplication extends ResourceConfig {
                     if(jsonNode.get("event_type").asText().equals("login") || jsonNode.get("event_type").asText().equals("logout")){
                         LogInOut logInOut = new LogInOut(event_id, event_timestamp, event_type, user_id);
                         logInOuts.add(logInOut);
+                    }
+                    else if(jsonNode.get("event_type").asText().equals("registration")){
+                        String country = jsonNodeChild.get("country").asText();
+                        String name = jsonNodeChild.get("name").asText();
+                        String device_os = jsonNodeChild.get("device_os").asText();
+                        String marketing_campaign = jsonNodeChild.get("marketing_campaign").asText();
+                        Registration registration = new Registration(event_id, event_timestamp, event_type, user_id, country, name, device_os, marketing_campaign);
+                        registrations.add(registration);
+                    }
+                    else if(jsonNode.get("event_type").asText().equals("transaction")){
+                        float transaction_amount = (float) jsonNodeChild.get("transaction_amount").asDouble();
+                        String transaction_currency = jsonNodeChild.get("transaction_currency").asText();
+                        TransactionEvent transaction = new TransactionEvent(event_id, event_timestamp, event_type, user_id, transaction_amount, transaction_currency);
+                        transactions.add(transaction);
                     }
                 }
             } catch (IOException e) {
