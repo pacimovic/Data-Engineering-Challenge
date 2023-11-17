@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/logInOuts")
+@Path("/log_in_outs")
 public class LogInOutResource {
 
     @Inject
