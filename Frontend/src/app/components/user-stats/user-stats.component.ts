@@ -21,5 +21,5 @@ export class UserStatsComponent {
     var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
     // Test if the date string matches the format
     return dateFormat.test(this.date);
-}
+  }
 }

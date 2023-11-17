@@ -1,15 +1,18 @@
 <div class="container">
+    <h3>User level stats</h3>
+    <br>
     <form (submit)="getUserStats()">
         <div class="form-group">
             <label for="exampleInput1">User id:</label>
             <input [(ngModel)]="user_id" name="user_id" type="text" class="form-control" id="exampleInput1" placeholder="Enter user_id">
-            <div class="error-message text-danger" *ngIf="user_id===''"> Text is required! </div>
+            <div class="error-message text-danger" *ngIf="user_id===''"> User id is required! </div>
         </div>
         <br>
         <div class="form-group">
             <label for="exampleInput2">Date:</label>
             <input [(ngModel)]="date" name="date" type="text" class="form-control" id="exampleInput2" placeholder="Enter date in format (YYYY-MM-DD)">
             <div class="error-message text-danger" *ngIf="!(isDateFormatValid() || date==='')"> Date format not valid! </div>
+            <small id="dateHelp" class="form-text text-muted">(Optional)</small>
         </div>
         <br>
        <button type="submit" [disabled]="user_id==='' || !(isDateFormatValid() || date==='')" class="btn btn-primary">Submit</button>
