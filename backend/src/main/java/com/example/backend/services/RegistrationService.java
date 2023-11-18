@@ -14,4 +14,8 @@ public class RegistrationService {
     public List<Registration> allRegistrations(){
         return this.registrationRepository.allRegistratiion();
     }
+
+    public Registration userRegistration(String user_id) {
+        return  this.registrationRepository.userRegistration(user_id);
+    }
 }
