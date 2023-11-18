@@ -51,6 +51,7 @@ public class HelloApplication extends ResourceConfig {
 
         packages("com.example.backend");
 
+        /*
         ProcessData processData = new ProcessData();
 
         processData.loadJSONl("events.jsonl");
@@ -60,6 +61,8 @@ public class HelloApplication extends ResourceConfig {
         System.out.println("Loading to database...Its gonna take a while :(");
         processData.loadToDatabase();
         System.out.println("Loading done.");
+
+         */
     }
 
 }

@@ -19,5 +19,8 @@ public class LogInOutService {
         return this.logInOutRepository.addLogInOut(logInOut);
     }
 
+    public List<LogInOut> userLogins(String user_id) {
+        return this.logInOutRepository.userLogins(user_id);
+    }
 
 }

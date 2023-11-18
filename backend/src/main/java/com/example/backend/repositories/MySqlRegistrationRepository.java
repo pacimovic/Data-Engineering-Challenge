@@ -68,7 +68,7 @@ public class MySqlRegistrationRepository extends MySqlAbstractRepository impleme
                 String name = resultSet.getString("name");
                 String device_os = resultSet.getString("device_os");
                 String marketing_campaign = resultSet.getString("marketing_campaign");
-                registration = new Registration(event_id, event_timestamp, event_type, user_id, country, name, device_os, marketing_campaign);
+                registration = new Registration(event_id, event_timestamp, event_type, user_reg_id, country, name, device_os, marketing_campaign);
             }
 
             resultSet.close();

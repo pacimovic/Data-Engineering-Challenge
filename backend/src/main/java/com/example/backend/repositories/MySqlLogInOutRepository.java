@@ -18,7 +18,7 @@ public class MySqlLogInOutRepository extends MySqlAbstractRepository implements 
             connection = this.newConnection();
 
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from log_in_outs");
+            resultSet = statement.executeQuery("SELECT * FROM log_in_outs");
             while (resultSet.next()) {
                 int event_id = resultSet.getInt("event_id");
                 int event_timestamp = resultSet.getInt("event_timestamp");
@@ -35,9 +35,7 @@ public class MySqlLogInOutRepository extends MySqlAbstractRepository implements 
             this.closeResultSet(resultSet);
             this.closeConnection(connection);
         }
-
         return logInOuts;
-
     }
 
     @Override
@@ -72,6 +70,40 @@ public class MySqlLogInOutRepository extends MySqlAbstractRepository implements 
 
         return logInOut;
 
+    }
+
+    @Override
+    public List<LogInOut> userLogins(String user_id) {
+        List<LogInOut> userLogins = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+
+            connection = this.newConnection();
+            preparedStatement = connection.prepareStatement("SELECT * FROM log_in_outs WHERE user_id = ? AND event_type = ? ORDER BY event_timestamp DESC");
+            preparedStatement.setString(1,user_id);
+            preparedStatement.setString(2,"login");
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int event_id = resultSet.getInt("event_id");
+                int event_timestamp = resultSet.getInt("event_timestamp");
+                String event_type = resultSet.getString("event_type");
+                String user_login_id = resultSet.getString("user_id");
+                LogInOut logInOut = new LogInOut(event_id, event_timestamp, event_type, user_login_id);
+                userLogins.add(logInOut);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return userLogins;
     }
 
 }
