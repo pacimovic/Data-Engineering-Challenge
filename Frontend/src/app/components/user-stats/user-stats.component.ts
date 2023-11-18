@@ -18,6 +18,7 @@ export class UserStatsComponent {
   numberLogins: number = 0
   daysSinceLastLogin: number = 0
   numberOfSessions: number = 0
+  timeSpentInGame: number = 0;
 
   constructor(private userStatsService: UserStatsService) {
 
@@ -37,11 +38,14 @@ export class UserStatsComponent {
       if(this.date === '') date1 = new Date("2010-05-23"); //thats last date in dataset
       else date1 = new Date(this.date)
 
-      var date2 = new Date(userLogins[0].event_timestamp * 1000)
-      //console.log(date1)
-      //console.log(date2)
+      var date2 = new Date()
+      for(let i = 0; i < userLogins.length; i++){
+        date2 = new Date(userLogins[i].event_timestamp * 1000)
+        if(date2.getTime() < date1.getTime()) break
+      }
+      if(date2.getTime() >= date1.getTime()) date2=date1
 
-
+      
       var Difference_In_Time = date1.getTime() - date2.getTime(); 
       var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
 
@@ -50,23 +54,17 @@ export class UserStatsComponent {
     })
 
     this.userStatsService.getUserSessions(this.user_id).subscribe(userSessions => {
-      
       if(this.date != ''){
         this.numberOfSessions = 0
         var date1 = new Date(this.date)
-        var date2 
-        console.log('Date in form: ' + date1)
         for(let i = 0; i < userSessions.length; i++){
-          date2 = new Date(userSessions[i].logInTime*1000)
-          console.log(date2)
+          var date2 = new Date(userSessions[i].logInTime*1000)
           if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()){
             this.numberOfSessions++;
           }
         }
       }
-      else{
-        this.numberOfSessions = userSessions.length
-      }
+      else this.numberOfSessions = userSessions.length
     })
 
   }
