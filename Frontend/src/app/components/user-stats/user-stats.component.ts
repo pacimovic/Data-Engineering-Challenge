@@ -8,17 +8,44 @@ import { UserStatsService } from 'src/app/services/user-stats.service';
 })
 export class UserStatsComponent {
 
+  //form data
   user_id: string = ''
   date: string = ''
 
-  constructor(private userStatsService: UserStatsService){
+  //result data
+  country: string = ''
+  name: string = ''
+  numberLogins: number = 0
+  daysSinceLastLogin: number = 0
+
+  constructor(private userStatsService: UserStatsService) {
 
   }
 
   getUserStats(): void {
-    
-    this.userStatsService.getUserStats().subscribe(transactions => {
-      console.log(transactions)
+
+    this.userStatsService.getUserStats(this.user_id).subscribe(registration => {
+      this.country = registration.country
+      this.name = registration.name
+    })
+
+    this.userStatsService.getUserLogins(this.user_id).subscribe(userLogins => {
+      this.numberLogins = userLogins.length
+
+      var date1 = null
+      if(this.date === '') date1 = new Date("05/23/2010");
+      else date1 = new Date(this.date)
+
+      var date2 = new Date(userLogins[0].event_timestamp * 1000)
+      console.log(date1)
+      console.log(date2)
+
+
+      var Difference_In_Time = date1.getTime() - date2.getTime(); 
+      var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
+
+      this.daysSinceLastLogin = Math.floor(Difference_In_Days) + 1
+
     })
 
   }

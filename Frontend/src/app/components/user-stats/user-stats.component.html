@@ -17,4 +17,14 @@
         <br>
        <button type="submit" [disabled]="user_id==='' || !(isDateFormatValid() || date==='')" class="btn btn-primary">Submit</button>
     </form>
+
+    <br><br>    
+
+    <h4>Country: <span class="badge bg-secondary">{{country}}</span></h4>
+    <h4>Name: <span class="badge bg-secondary">{{name}}</span></h4>
+    <h4>Number of logins: <span class="badge bg-secondary">{{numberLogins}}</span></h4>
+    <h4>Days since last login: <span class="badge bg-secondary">{{daysSinceLastLogin}}</span></h4>
+    <h4>Number of sessions: <span class="badge bg-secondary">...</span></h4>
+    <h4>Time spent in game: <span class="badge bg-secondary">...</span></h4>
+    
 </div>

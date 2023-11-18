@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Transaction } from '../model';
+import { Log, Registration, Transaction } from '../model';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -13,7 +13,11 @@ export class UserStatsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getUserStats(): Observable<Transaction> {
-    return this.httpClient.get<Transaction>(`${this.apiUrl}/transactions`);
+  getUserStats(user_id: string): Observable<Registration> {
+    return this.httpClient.get<Registration>(`${this.apiUrl}/registrations/${user_id}`)
+  }
+
+  getUserLogins(user_id: string): Observable<Log[]> {
+    return this.httpClient.get<Log[]>(`${this.apiUrl}/log_in_outs/${user_id}`)
   }
 }
