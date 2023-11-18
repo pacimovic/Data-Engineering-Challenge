@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserStatsService } from 'src/app/services/user-stats.service';
 
 @Component({
   selector: 'app-user-stats',
@@ -10,11 +11,17 @@ export class UserStatsComponent {
   user_id: string = ''
   date: string = ''
 
+  constructor(private userStatsService: UserStatsService){
 
-  getUserStats(): void {
-    console.log("User id: " + this.user_id + ", Date: " + this.date)
   }
 
+  getUserStats(): void {
+    
+    this.userStatsService.getUserStats().subscribe(transactions => {
+      console.log(transactions)
+    })
+
+  }
 
   isDateFormatValid(): boolean {
     // Regular expression for the "YYYY-MM-DD" format
