@@ -24,3 +24,10 @@ export interface Log {
     event_type: string,
     user_id: string,
 }
+
+export interface GameSession {
+    session_id: number,
+    logInTime: number,
+    logOutTime: number,
+    user_id: string
+}

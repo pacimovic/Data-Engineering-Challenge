@@ -1,7 +1,7 @@
 <div class="container">
     <h3>User level stats</h3>
     <br>
-    <form (submit)="getUserStats()">
+    <form (submit)="getUserData()">
         <div class="form-group">
             <label for="exampleInput1">User id:</label>
             <input [(ngModel)]="user_id" name="user_id" type="text" class="form-control" id="exampleInput1" placeholder="Enter user_id">
@@ -24,7 +24,7 @@
     <h4>Name: <span class="badge bg-secondary">{{name}}</span></h4>
     <h4>Number of logins: <span class="badge bg-secondary">{{numberLogins}}</span></h4>
     <h4>Days since last login: <span class="badge bg-secondary">{{daysSinceLastLogin}}</span></h4>
-    <h4>Number of sessions: <span class="badge bg-secondary">...</span></h4>
+    <h4>Number of sessions: <span class="badge bg-secondary">{{numberOfSessions}}</span></h4>
     <h4>Time spent in game: <span class="badge bg-secondary">...</span></h4>
     
 </div>

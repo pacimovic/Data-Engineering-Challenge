@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Log, Registration, Transaction } from '../model';
+import { GameSession, Log, Registration, Transaction } from '../model';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -19,5 +19,9 @@ export class UserStatsService {
 
   getUserLogins(user_id: string): Observable<Log[]> {
     return this.httpClient.get<Log[]>(`${this.apiUrl}/log_in_outs/${user_id}`)
+  }
+
+  getUserSessions(user_id: string): Observable<GameSession[]> {
+    return this.httpClient.get<GameSession[]>(`${this.apiUrl}/sessions/${user_id}`)
   }
 }
