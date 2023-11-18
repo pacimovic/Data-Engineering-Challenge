@@ -4,10 +4,7 @@ import com.example.backend.entities.LogInOut;
 import com.example.backend.entities.Registration;
 import com.example.backend.entities.TransactionEvent;
 import com.example.backend.repositories.*;
-import com.example.backend.services.LogInOutService;
-import com.example.backend.services.ProcessData;
-import com.example.backend.services.RegistrationService;
-import com.example.backend.services.TransactionService;
+import com.example.backend.services.*;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,10 +37,12 @@ public class HelloApplication extends ResourceConfig {
                 this.bind(MySqlLogInOutRepository.class).to(LogInOutRepository.class).in(Singleton.class);
                 this.bind(MySqlRegistrationRepository.class).to(RegistrationRepository.class).in(Singleton.class);
                 this.bind(MySqlTransactionRepository.class).to(TransactionRepository.class).in(Singleton.class);
+                this.bind(MySqlGameSessionRepository.class).to(GameSessionRepository.class).in(Singleton.class);
 
                 this.bindAsContract(LogInOutService.class);
                 this.bindAsContract(RegistrationService.class);
                 this.bindAsContract(TransactionService.class);
+                this.bindAsContract(GameSessionService.class);
             }
         };
 
