@@ -49,22 +49,34 @@ export class UserStatsComponent {
       var Difference_In_Time = date1.getTime() - date2.getTime(); 
       var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
 
-      this.daysSinceLastLogin = Math.floor(Difference_In_Days)
+      this.daysSinceLastLogin = Math.round(Difference_In_Days)
 
     })
 
     this.userStatsService.getUserSessions(this.user_id).subscribe(userSessions => {
       if(this.date != ''){
         this.numberOfSessions = 0
+        this.timeSpentInGame = 0
         var date1 = new Date(this.date)
         for(let i = 0; i < userSessions.length; i++){
-          var date2 = new Date(userSessions[i].logInTime*1000)
-          if(date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()){
+          var logInTime = new Date(userSessions[i].logInTime*1000)
+          var logOutTime = new Date(userSessions[i].logOutTime*1000)
+          if(date1.getFullYear() == logInTime.getFullYear() && date1.getMonth() == logInTime.getMonth() && date1.getDate() == logInTime.getDate()){
             this.numberOfSessions++;
+
+            this.timeSpentInGame += (Math.abs(logOutTime.getTime() - logInTime.getTime())/1000)  
           }
         }
       }
-      else this.numberOfSessions = userSessions.length
+      else {
+        this.timeSpentInGame = 0
+        for(let i = 0; i < userSessions.length; i++){
+          var logInTime = new Date(userSessions[i].logInTime*1000)
+          var logOutTime = new Date(userSessions[i].logOutTime*1000)
+          this.timeSpentInGame += (Math.abs(logOutTime.getTime() - logInTime.getTime())/1000)  
+        }
+        this.numberOfSessions = userSessions.length
+      }
     })
 
   }
