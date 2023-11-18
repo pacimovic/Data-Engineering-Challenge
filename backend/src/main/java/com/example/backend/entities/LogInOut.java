@@ -7,18 +7,18 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "log_in_outs")
-public class LogInOut {
+public class LogInOut implements Comparable<LogInOut>{
 
     @Id
     private int event_id;
-    private int event_timestamp;
+    private Integer event_timestamp;
     private String event_type;
     private String user_id;
 
     public LogInOut() {
     }
 
-    public LogInOut(int event_id, int event_timestamp, String event_type, String user_id) {
+    public LogInOut(int event_id, Integer event_timestamp, String event_type, String user_id) {
         this.event_id = event_id;
         this.event_timestamp = event_timestamp;
         this.event_type = event_type;
@@ -33,11 +33,11 @@ public class LogInOut {
         this.event_id = event_id;
     }
 
-    public int getEvent_timestamp() {
+    public Integer getEvent_timestamp() {
         return event_timestamp;
     }
 
-    public void setEvent_timestamp(int event_timestamp) {
+    public void setEvent_timestamp(Integer event_timestamp) {
         this.event_timestamp = event_timestamp;
     }
 
@@ -65,5 +65,10 @@ public class LogInOut {
                 ", event_type='" + event_type + '\'' +
                 ", user_id='" + user_id + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(LogInOut log) {
+        return this.event_timestamp.compareTo(log.getEvent_timestamp());
     }
 }
