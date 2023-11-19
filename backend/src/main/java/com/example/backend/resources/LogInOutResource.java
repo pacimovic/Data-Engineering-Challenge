@@ -1,5 +1,6 @@
 package com.example.backend.resources;
 
+import com.example.backend.entities.Country;
 import com.example.backend.entities.LogInOut;
 import com.example.backend.services.LogInOutService;
 
@@ -18,9 +19,30 @@ public class LogInOutResource {
     private LogInOutService logInOutService;
 
     @GET
+    @Produces("text/plain")
+    public int numOfActiveUsers() {
+        return this.logInOutService.numOfActiveUsers();
+    }
+
+    @GET
+    @Path("/{date1}/{date2}")
+    @Produces("text/plain")
+    public int numOfActiveUsersDate(@PathParam("date1") Integer date1, @PathParam("date2") Integer date2) {
+        return this.logInOutService.numOfActiveUsersDate(date1, date2);
+    }
+
+    @GET
+    @Path("/country")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<LogInOut> allLogInOuts(){
-        return  this.logInOutService.allLogInOuts();
+    public List<Country> numOfActiveUsersCountry() {
+        return this.logInOutService.numOfActiveUsersCountry();
+    }
+
+    @GET
+    @Path("/country/{date1}/{date2}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Country> numOfActiveUsersCountryDate(@PathParam("date1") Integer date1, @PathParam("date2") Integer date2) {
+        return this.logInOutService.numOfActiveUsersCountryDate(date1, date2);
     }
 
     @GET

@@ -1,76 +1,157 @@
 package com.example.backend.repositories;
 
+import com.example.backend.entities.Country;
 import com.example.backend.entities.LogInOut;
+import com.example.backend.entities.Registration;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlLogInOutRepository extends MySqlAbstractRepository implements LogInOutRepository{
-    @Override
-    public List<LogInOut> allLogInOuts() {
-        List<LogInOut> logInOuts = new ArrayList<>();
-
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = this.newConnection();
-
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM log_in_outs");
-            while (resultSet.next()) {
-                int event_id = resultSet.getInt("event_id");
-                int event_timestamp = resultSet.getInt("event_timestamp");
-                String event_type = resultSet.getString("event_type");
-                String user_id = resultSet.getString("user_id");
-                LogInOut logInOut = new LogInOut(event_id, event_timestamp, event_type, user_id);
-                logInOuts.add(logInOut);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            this.closeStatement(statement);
-            this.closeResultSet(resultSet);
-            this.closeConnection(connection);
-        }
-        return logInOuts;
-    }
 
     @Override
-    public LogInOut addLogInOut(LogInOut logInOut) {
+    public int numOfActiveUsers() {
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        int numOfActiveUsers = 0;
         try {
             connection = this.newConnection();
 
+            preparedStatement = connection.prepareStatement("SELECT COUNT(DISTINCT user_id) AS user_count FROM log_in_outs WHERE event_type = ?");
+            preparedStatement.setString(1, "login");
+            resultSet = preparedStatement.executeQuery();
 
-            preparedStatement = connection.prepareStatement("INSERT INTO log_in_outs (event_id, event_timestamp, event_type, user_id) VALUES(?, ?, ?, ?)");
-            preparedStatement.setInt(1, logInOut.getEvent_id());
-            preparedStatement.setInt(2, logInOut.getEvent_timestamp());
-            preparedStatement.setString(3, logInOut.getEvent_type());
-            preparedStatement.setString(4, logInOut.getUser_id());
-            preparedStatement.executeUpdate();
-            //resultSet = preparedStatement.getGeneratedKeys();
-
-           /*
-            if (resultSet.next()) {
-                logInOut.setEvent_id(resultSet.getInt(1));
+            if(resultSet.next()) {
+                numOfActiveUsers = resultSet.getInt("user_count");
             }
-            */
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             this.closeStatement(preparedStatement);
-            //this.closeResultSet(resultSet);
+            this.closeResultSet(resultSet);
             this.closeConnection(connection);
         }
 
-        return logInOut;
-
+        return numOfActiveUsers;
     }
+
+    @Override
+    public int numOfActiveUsersDate(Integer date1, Integer date2) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int numOfActiveUsers = 0;
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT COUNT(DISTINCT user_id) AS user_count FROM log_in_outs WHERE " +
+                    "event_type = ? AND event_timestamp BETWEEN ? AND ?");
+            preparedStatement.setString(1, "login");
+            preparedStatement.setInt(2, date1);
+            preparedStatement.setInt(3, date2);
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                numOfActiveUsers = resultSet.getInt("user_count");
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return numOfActiveUsers;
+    }
+
+    @Override
+    public List<Country> numOfActiveUsersCountry() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Country> countries = new ArrayList<>();
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT r.country AS country, COUNT(DISTINCT l.user_id) AS user_count\n" +
+                    "FROM registrations r\n" +
+                    "LEFT JOIN log_in_outs l ON r.user_id = l.user_id AND l.event_type = ?\n" +
+                    "GROUP BY r.country;");
+            preparedStatement.setString(1, "login");
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                int activeUsersNumber = resultSet.getInt("user_count");
+                Country country = new Country(countryName, activeUsersNumber);
+                countries.add(country);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return countries;
+    }
+
+    @Override
+    public List<Country> numOfActiveUsersCountryDate(Integer date1, Integer date2) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Country> countries = new ArrayList<>();
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT r.country AS country, COUNT(DISTINCT l.user_id) AS user_count\n" +
+                    "FROM registrations r\n" +
+                    "LEFT JOIN log_in_outs l ON r.user_id = l.user_id AND l.event_type = ? AND l.event_timestamp BETWEEN ? AND ?\n" +
+                    "GROUP BY r.country;");
+            preparedStatement.setString(1, "login");
+            preparedStatement.setInt(2, date1);
+            preparedStatement.setInt(3, date2);
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                int activeUsersNumber = resultSet.getInt("user_count");
+                Country country = new Country(countryName, activeUsersNumber);
+                countries.add(country);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return countries;
+    }
+
 
     @Override
     public List<LogInOut> userLogins(String user_id) {

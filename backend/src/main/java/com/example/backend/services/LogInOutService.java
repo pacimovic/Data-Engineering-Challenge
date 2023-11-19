@@ -1,5 +1,6 @@
 package com.example.backend.services;
 
+import com.example.backend.entities.Country;
 import com.example.backend.entities.LogInOut;
 import com.example.backend.repositories.LogInOutRepository;
 
@@ -11,14 +12,18 @@ public class LogInOutService {
     @Inject
     private LogInOutRepository logInOutRepository;
 
-    public List<LogInOut> allLogInOuts() {
-        return this.logInOutRepository.allLogInOuts();
+    public int numOfActiveUsers() {
+        return this.logInOutRepository.numOfActiveUsers();
     }
-
-    public LogInOut addLogInOut(LogInOut logInOut){
-        return this.logInOutRepository.addLogInOut(logInOut);
+    public int numOfActiveUsersDate(Integer date1, Integer date2) {
+        return this.logInOutRepository.numOfActiveUsersDate(date1, date2);
     }
-
+    public List<Country> numOfActiveUsersCountry() {
+        return this.logInOutRepository.numOfActiveUsersCountry();
+    }
+    public List<Country> numOfActiveUsersCountryDate(Integer date1, Integer date2) {
+        return this.logInOutRepository.numOfActiveUsersCountryDate(date1, date2);
+    }
     public List<LogInOut> userLogins(String user_id) {
         return this.logInOutRepository.userLogins(user_id);
     }
