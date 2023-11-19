@@ -46,6 +46,34 @@ public class LogInOutResource {
     }
 
     @GET
+    @Path("/logins")
+    @Produces("text/plain")
+    public int numOfLogins() {
+        return this.logInOutService.numOfLogins();
+    }
+
+    @GET
+    @Path("/logins/{date1}/{date2}")
+    @Produces("text/plain")
+    public int numOfLoginsDate(@PathParam("date1") Integer date1, @PathParam("date2") Integer date2) {
+        return this.logInOutService.numOfLoginsDate(date1, date2);
+    }
+
+    @GET
+    @Path("/logins/country")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Country> numOfLoginsCountry() {
+        return this.logInOutService.numOfLoginsCountry();
+    }
+
+    @GET
+    @Path("/logins/country/{date1}/{date2}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Country> numOfLoginsCountryDate(@PathParam("date1") Integer date1, @PathParam("date2") Integer date2) {
+        return this.logInOutService.numOfLoginsCountryDate(date1, date2);
+    }
+
+    @GET
     @Path("/{user_id}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<LogInOut> userLogins(@PathParam("user_id") String user_id) {

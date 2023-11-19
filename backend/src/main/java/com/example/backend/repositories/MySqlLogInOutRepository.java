@@ -11,6 +11,147 @@ import java.util.List;
 public class MySqlLogInOutRepository extends MySqlAbstractRepository implements LogInOutRepository{
 
     @Override
+    public int numOfLogins() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int numOfLogins = 0;
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT COUNT(event_id) AS logins_count FROM log_in_outs WHERE event_type = ?");
+            preparedStatement.setString(1, "login");
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                numOfLogins = resultSet.getInt("logins_count");
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return numOfLogins;
+    }
+
+    @Override
+    public int numOfLoginsDate(Integer date1, Integer date2) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int numOfLogins = 0;
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT COUNT(event_id) AS logins_count FROM log_in_outs WHERE event_type = ?" +
+                    "AND event_timestamp BETWEEN ? AND ?");
+            preparedStatement.setString(1, "login");
+            preparedStatement.setInt(2, date1);
+            preparedStatement.setInt(3, date2);
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                numOfLogins = resultSet.getInt("logins_count");
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return numOfLogins;
+    }
+
+    @Override
+    public List<Country> numOfLoginsCountry() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Country> countries = new ArrayList<>();
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT r.country AS country, COUNT(l.event_id) AS logins_count\n" +
+                    "FROM registrations r\n" +
+                    "LEFT JOIN log_in_outs l ON r.user_id = l.user_id AND l.event_type = ?\n" +
+                    "GROUP BY r.country;");
+            preparedStatement.setString(1, "login");
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                int number = resultSet.getInt("logins_count");
+                Country country = new Country(countryName, number);
+                countries.add(country);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return countries;
+    }
+
+    @Override
+    public List<Country> numOfLoginsCountryDate(Integer date1, Integer date2) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Country> countries = new ArrayList<>();
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT r.country AS country, COUNT(l.event_id) AS logins_count\n" +
+                    "FROM registrations r\n" +
+                    "LEFT JOIN log_in_outs l ON r.user_id = l.user_id AND l.event_type = ? AND l.event_timestamp BETWEEN ? AND ?\n" +
+                    "GROUP BY r.country;");
+            preparedStatement.setString(1, "login");
+            preparedStatement.setInt(2, date1);
+            preparedStatement.setInt(3, date2);
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                int number = resultSet.getInt("logins_count");
+                Country country = new Country(countryName, number);
+                countries.add(country);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return countries;
+    }
+
+    @Override
     public int numOfActiveUsers() {
 
         Connection connection = null;
@@ -94,8 +235,8 @@ public class MySqlLogInOutRepository extends MySqlAbstractRepository implements 
 
             while(resultSet.next()) {
                 String countryName = resultSet.getString("country");
-                int activeUsersNumber = resultSet.getInt("user_count");
-                Country country = new Country(countryName, activeUsersNumber);
+                int number = resultSet.getInt("user_count");
+                Country country = new Country(countryName, number);
                 countries.add(country);
             }
 
@@ -133,8 +274,8 @@ public class MySqlLogInOutRepository extends MySqlAbstractRepository implements 
 
             while(resultSet.next()) {
                 String countryName = resultSet.getString("country");
-                int activeUsersNumber = resultSet.getInt("user_count");
-                Country country = new Country(countryName, activeUsersNumber);
+                int number = resultSet.getInt("user_count");
+                Country country = new Country(countryName, number);
                 countries.add(country);
             }
 

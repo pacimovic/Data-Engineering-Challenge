@@ -3,11 +3,11 @@ package com.example.backend.entities;
 public class Country {
 
     private String country;
-    private int activeUsersNumber;
+    private int number;
 
-    public Country(String country, int activeUsersNumber) {
+    public Country(String country, int number) {
         this.country = country;
-        this.activeUsersNumber = activeUsersNumber;
+        this.number = number;
     }
 
     public String getCountry() {
@@ -18,11 +18,11 @@ public class Country {
         this.country = country;
     }
 
-    public int getActiveUsersNumber() {
-        return activeUsersNumber;
+    public int getNumber() {
+        return number;
     }
 
-    public void setActiveUsersNumber(int activeUsersNumber) {
-        this.activeUsersNumber = activeUsersNumber;
+    public void setNumber(int number) {
+        this.number = number;
     }
 }
