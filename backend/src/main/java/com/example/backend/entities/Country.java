@@ -3,26 +3,17 @@ package com.example.backend.entities;
 public class Country {
 
     private String country;
-    private int number;
+    private int intValue;
+    private float floatValue;
 
-    private float revenue;
-
-    public Country(String country, int number) {
+    public Country(String country, int intValue) {
         this.country = country;
-        this.number = number;
+        this.intValue = intValue;
     }
 
-    public Country(String country, float revenue) {
+    public Country(String country, float floatValue) {
         this.country = country;
-        this.revenue = revenue;
-    }
-
-    public float getRevenue() {
-        return revenue;
-    }
-
-    public void setRevenue(float revenue) {
-        this.revenue = revenue;
+        this.floatValue = floatValue;
     }
 
     public String getCountry() {
@@ -33,11 +24,19 @@ public class Country {
         this.country = country;
     }
 
-    public int getNumber() {
-        return number;
+    public int getIntValue() {
+        return intValue;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setIntValue(int intValue) {
+        this.intValue = intValue;
+    }
+
+    public float getFloatValue() {
+        return floatValue;
+    }
+
+    public void setFloatValue(float floatValue) {
+        this.floatValue = floatValue;
     }
 }
