@@ -71,12 +71,12 @@ export class GameStatsComponent {
       this.gameStatsService.getTimeAvgCountry().subscribe(countries => this.timeAvgCountries = countries)
     }
     else if(this.date != '' && this.country === true){
-      this.gameStatsService.getNumOfActiveUsersCountryDate(date1, date2).subscribe(countries => console.log(countries))
-      this.gameStatsService.getNumOfLoginsCountryDate(date1, date2).subscribe(countries => console.log(countries))
-      this.gameStatsService.getTotalRevenueCountryDate(date1, date2).subscribe(countries => console.log(countries))
-      this.gameStatsService.getPaidUsersCountryDate(date1, date2).subscribe(countries => console.log(countries))
-      this.gameStatsService.getSessionsAvgCountryDate(date1, date2).subscribe(countries => console.log(countries))
-      this.gameStatsService.getTimeAvgCountryDate(date1, date2).subscribe(countries => console.log(countries))
+      this.gameStatsService.getNumOfActiveUsersCountryDate(date1, date2).subscribe(countries => this.numOfActiveUsersCountries = countries)
+      this.gameStatsService.getNumOfLoginsCountryDate(date1, date2).subscribe(countries => this.numOfLoginsCountries = countries)
+      this.gameStatsService.getTotalRevenueCountryDate(date1, date2).subscribe(countries => this.totalRevenueCountries = countries)
+      this.gameStatsService.getPaidUsersCountryDate(date1, date2).subscribe(countries => this.paidUsersCountries = countries)
+      this.gameStatsService.getSessionsAvgCountryDate(date1, date2).subscribe(countries => this.sessionAvgCountries = countries)
+      this.gameStatsService.getTimeAvgCountryDate(date1, date2).subscribe(countries => this.timeAvgCountries = countries)
     }
 
   }

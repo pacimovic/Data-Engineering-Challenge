@@ -22,7 +22,7 @@
     <br><br>
 
     <h4 *ngIf="date != ''">Day: {{date}}</h4>
-    <div *ngIf="numOfLogins != 0">
+    <div *ngIf="!country">
         <h4>Number of active users: <span class="badge bg-secondary">{{numOfActiveUsers}} user/s</span></h4>
         <h4>Number of logins: <span class="badge bg-secondary">{{numOfLogins}} login/s</span></h4>
         <h4>Total revenue: <span class="badge bg-secondary">{{totalRevenue}}$</span></h4>
@@ -32,11 +32,11 @@
     </div>
     <br><br>
 
-    <div *ngIf="numOfActiveUsersCountries.length != 0">
+    <div *ngIf="country">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Countries</th>
                     <th scope="col" *ngFor="let item of numOfActiveUsersCountries">{{item.country}}</th>
                 </tr>
             </thead>
@@ -50,7 +50,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Countries</th>
                     <th scope="col" *ngFor= "let item of numOfLoginsCountries">{{item.country}}</th>
                 </tr>
             </thead>
@@ -64,7 +64,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Countries</th>
                     <th scope="col" *ngFor="let item of totalRevenueCountries">{{item.country}}</th>
                 </tr>
             </thead>
@@ -78,7 +78,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Countries</th>
                     <th scope="col" *ngFor="let item of paidUsersCountries">{{item.country}}</th>
                 </tr>
             </thead>
@@ -92,7 +92,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Countries</th>
                     <th scope="col" *ngFor="let item of sessionAvgCountries">{{item.country}}</th>
                 </tr>
             </thead>
@@ -106,7 +106,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Countries</th>
                     <th scope="col" *ngFor="let item of timeAvgCountries">{{item.country}}</th>
                 </tr>
             </thead>
