@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Country } from 'src/app/model';
 import { GameStatsService } from 'src/app/services/game-stats.service';
 
 @Component({
@@ -8,8 +9,30 @@ import { GameStatsService } from 'src/app/services/game-stats.service';
 })
 export class GameStatsComponent {
 
+  //form data
   date: string = ''
   country: boolean = false
+
+  //result data
+  numOfActiveUsers: number = 0
+  numOfLogins: number = 0
+  totalRevenue: number = 0
+  paidUsers: number = 0
+  sessionAvg: number = 0
+  timeAvg: number = 0
+
+  foundObject: Country = {
+    country: '',
+    intValue: 0,
+    floatValue: 0
+  }
+
+  numOfActiveUsersCountries: Country[] = []
+  numOfLoginsCountries: Country[] = []
+  totalRevenueCountries: Country[] = []
+  paidUsersCountries: Country[] = []
+  sessionAvgCountries: Country[] = []
+  timeAvgCountries: Country[] = []
 
   constructor(private gameStatsService: GameStatsService) {
 
@@ -22,31 +45,30 @@ export class GameStatsComponent {
     nextDay.setDate(date.getDate() + 1)
     var date1 = date.getTime()/1000
     var date2 = nextDay.getTime()/1000
-    
-
+        
     if(this.date === '' && this.country === false){
-      this.gameStatsService.getNumOfActiveUsers().subscribe(numOfActiveUsers => console.log('Number of active users: ' + numOfActiveUsers))
-      this.gameStatsService.getNumOfLogins().subscribe(numOfLogins => console.log('Number of logins: ' + numOfLogins))
-      this.gameStatsService.getTotalRevenue().subscribe(totalRevenue => console.log('Total revenue: ' + totalRevenue))
-      this.gameStatsService.getPaidUsers().subscribe(paidUsers => console.log('Number of paid users: ' + paidUsers))
-      this.gameStatsService.getSessionsAvg().subscribe(sessionsAvg => console.log('Average number of sessions: ' + sessionsAvg))
-      this.gameStatsService.getTimeAvg().subscribe(timeAvg => console.log('Average total time spent in game: ' + timeAvg))
+      this.gameStatsService.getNumOfActiveUsers().subscribe(numOfActiveUsers => this.numOfActiveUsers = numOfActiveUsers)
+      this.gameStatsService.getNumOfLogins().subscribe(numOfLogins => this.numOfLogins = numOfLogins)
+      this.gameStatsService.getTotalRevenue().subscribe(totalRevenue => this.totalRevenue = Math.round(totalRevenue))
+      this.gameStatsService.getPaidUsers().subscribe(paidUsers => this.paidUsers = paidUsers)
+      this.gameStatsService.getSessionsAvg().subscribe(sessionsAvg => this.sessionAvg =  Math.round(sessionsAvg))
+      this.gameStatsService.getTimeAvg().subscribe(timeAvg => this.timeAvg =  Math.round(timeAvg))
     }
     else if(this.date != '' && this.country === false){
-      this.gameStatsService.getNumOfActiveUsersDate(date1, date2).subscribe(numOfActiveUsers => console.log('Number of active users for day ' + this.date + ': ' + numOfActiveUsers))
-      this.gameStatsService.getNumOfLoginsDate(date1, date2).subscribe(numOfLogins => console.log('Number of logins for day ' + this.date + ': ' + numOfLogins))
-      this.gameStatsService.getTotalRevenueDate(date1, date2).subscribe(totalRevenue => console.log('Total revenue for day ' + this.date + ': ' + totalRevenue))
-      this.gameStatsService.getPaidUsersDate(date1, date2).subscribe(paidUsers => console.log('Number of paid users for day ' + this.date + ': ' + paidUsers))
-      this.gameStatsService.getSessionsAvgDate(date1, date2).subscribe(sessionsAvg => console.log('Average number of sessions for day ' + this.date + ': ' + sessionsAvg))
-      this.gameStatsService.getTimeAvgDate(date1, date2).subscribe(timeAvg => console.log('Average total time spent in game for day ' + this.date + ': ' + timeAvg))
+      this.gameStatsService.getNumOfActiveUsersDate(date1, date2).subscribe(numOfActiveUsers => this.numOfActiveUsers = numOfActiveUsers)
+      this.gameStatsService.getNumOfLoginsDate(date1, date2).subscribe(numOfLogins => this.numOfLogins = numOfLogins)
+      this.gameStatsService.getTotalRevenueDate(date1, date2).subscribe(totalRevenue => this.totalRevenue = Math.round(totalRevenue))
+      this.gameStatsService.getPaidUsersDate(date1, date2).subscribe(paidUsers => this.paidUsers = paidUsers)
+      this.gameStatsService.getSessionsAvgDate(date1, date2).subscribe(sessionsAvg => this.sessionAvg =  Math.round(sessionsAvg))
+      this.gameStatsService.getTimeAvgDate(date1, date2).subscribe(timeAvg => this.timeAvg =  Math.round(timeAvg) )
     }
     else if(this.date === '' && this.country === true){
-      this.gameStatsService.getNumOfActiveUsersCountry().subscribe(countries => console.log(countries))
-      this.gameStatsService.getNumOfLoginsCountry().subscribe(countries => console.log(countries))
-      this.gameStatsService.getTotalRevenueCountry().subscribe(countries => console.log(countries))
-      this.gameStatsService.getPaidUsersCountry().subscribe(countries => console.log(countries))
-      this.gameStatsService.getSessionsAvgCountry().subscribe(countries => console.log(countries))
-      this.gameStatsService.getTimeAvgCountry().subscribe(countries => console.log(countries))
+      this.gameStatsService.getNumOfActiveUsersCountry().subscribe(countries => this.numOfActiveUsersCountries = countries)
+      this.gameStatsService.getNumOfLoginsCountry().subscribe(countries => this.numOfLoginsCountries = countries)
+      this.gameStatsService.getTotalRevenueCountry().subscribe(countries => this.totalRevenueCountries = countries)
+      this.gameStatsService.getPaidUsersCountry().subscribe(countries => this.paidUsersCountries = countries)
+      this.gameStatsService.getSessionsAvgCountry().subscribe(countries => this.sessionAvgCountries = countries)
+      this.gameStatsService.getTimeAvgCountry().subscribe(countries => this.timeAvgCountries = countries)
     }
     else if(this.date != '' && this.country === true){
       this.gameStatsService.getNumOfActiveUsersCountryDate(date1, date2).subscribe(countries => console.log(countries))
@@ -58,8 +80,6 @@ export class GameStatsComponent {
     }
 
   }
-
-
 
 
 

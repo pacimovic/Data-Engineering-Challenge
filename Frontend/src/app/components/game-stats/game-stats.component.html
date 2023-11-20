@@ -4,8 +4,10 @@
     <form (submit)="getGameData()">
         <div class="form-group">
             <label for="exampleInput2">Date:</label>
-            <input [(ngModel)]="date" name="date" type="text" class="form-control" id="exampleInput2" placeholder="Enter date in format (YYYY-MM-DD)">
-            <div class="error-message text-danger" *ngIf="!(isDateFormatValid() || date==='')"> Date format not valid! </div>
+            <input [(ngModel)]="date" name="date" type="text" class="form-control" id="exampleInput2"
+                placeholder="Enter date in format (YYYY-MM-DD)">
+            <div class="error-message text-danger" *ngIf="!(isDateFormatValid() || date==='')"> Date format not valid!
+            </div>
             <small id="dateHelp" class="form-text text-muted">(Optional)</small>
         </div>
         <br>
@@ -14,6 +16,108 @@
             <label class="form-check-label" for="exampleCheck1">Country</label>
         </div>
         <br>
-       <button type="submit" [disabled]="!(isDateFormatValid() || date==='')" class="btn btn-primary">Submit</button>
+        <button type="submit" [disabled]="!(isDateFormatValid() || date==='')" class="btn btn-primary">Submit</button>
     </form>
+
+    <br><br>
+
+    <h4 *ngIf="date != ''">Day: {{date}}</h4>
+    <div *ngIf="numOfLogins != 0">
+        <h4>Number of active users: <span class="badge bg-secondary">{{numOfActiveUsers}} user/s</span></h4>
+        <h4>Number of logins: <span class="badge bg-secondary">{{numOfLogins}} login/s</span></h4>
+        <h4>Total revenue: <span class="badge bg-secondary">{{totalRevenue}}$</span></h4>
+        <h4>Number of paid users: <span class="badge bg-secondary">{{paidUsers}} user/s</span></h4>
+        <h4>Average number of sessions: <span class="badge bg-secondary">{{sessionAvg}} session/s</span></h4>
+        <h4>Average total time spent in game <span class="badge bg-secondary">{{timeAvg}} second/s</span></h4>
+    </div>
+    <br><br>
+
+    <div *ngIf="numOfActiveUsersCountries.length != 0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" *ngFor="let item of numOfActiveUsersCountries">{{item.country}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Number of active users:</th>
+                    <td *ngFor="let item of numOfActiveUsersCountries">{{item.intValue}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" *ngFor= "let item of numOfLoginsCountries">{{item.country}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Number of logins:</th>
+                    <td *ngFor="let item of numOfLoginsCountries">{{item.intValue}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" *ngFor="let item of totalRevenueCountries">{{item.country}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Total revenue:</th>
+                    <td *ngFor="let item of totalRevenueCountries">{{item.floatValue}}$</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" *ngFor="let item of paidUsersCountries">{{item.country}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Paid users:</th>
+                    <td *ngFor="let item of paidUsersCountries">{{item.intValue}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" *ngFor="let item of sessionAvgCountries">{{item.country}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Average number of sessions:</th>
+                    <td *ngFor="let item of sessionAvgCountries">{{item.floatValue}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" *ngFor="let item of timeAvgCountries">{{item.country}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Average total time spent in game:</th>
+                    <td *ngFor="let item of timeAvgCountries">{{item.floatValue}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
 </div>
