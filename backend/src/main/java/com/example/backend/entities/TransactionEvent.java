@@ -13,13 +13,13 @@ public class TransactionEvent {
     private int event_timestamp;
     private String event_type;
     private String user_id;
-    private float transaction_amount;
+    private double transaction_amount;
     private String transaction_currency;
 
     public TransactionEvent() {
     }
 
-    public TransactionEvent(int event_id, int event_timestamp, String event_type, String user_id, float transaction_amount, String transaction_currency) {
+    public TransactionEvent(int event_id, int event_timestamp, String event_type, String user_id, double transaction_amount, String transaction_currency) {
         this.event_id = event_id;
         this.event_timestamp = event_timestamp;
         this.event_type = event_type;
@@ -60,11 +60,11 @@ public class TransactionEvent {
         this.user_id = user_id;
     }
 
-    public float getTransaction_amount() {
+    public double getTransaction_amount() {
         return transaction_amount;
     }
 
-    public void setTransaction_amount(float transaction_amount) {
+    public void setTransaction_amount(double transaction_amount) {
         this.transaction_amount = transaction_amount;
     }
 

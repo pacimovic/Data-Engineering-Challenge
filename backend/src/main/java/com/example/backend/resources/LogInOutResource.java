@@ -48,7 +48,7 @@ public class LogInOutResource {
     @GET
     @Path("/logins")
     @Produces("text/plain")
-    public int numOfLogins() {
+        public int numOfLogins() {
         return this.logInOutService.numOfLogins();
     }
 

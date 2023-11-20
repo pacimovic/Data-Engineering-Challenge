@@ -29,6 +29,11 @@ public class ProcessData {
     private List<GameSession> gameSessions = new ArrayList<>();
     private HashMap<String,Integer> map = new HashMap<>();
 
+    static String[] arrayOfCountries = {"ES", "IT", "US", "DE"};
+    static List<String> countries = Arrays.asList(arrayOfCountries);
+    static Double[] arrayOfAmounts = {0.99, 1.99, 2.99, 4.99, 9.99};
+    static List<Double> transaction_amounts = Arrays.asList(arrayOfAmounts);
+
     public void startCleaning(){
         System.out.println("Logs: " + logInOuts.size());
         System.out.println("Registrations: " +registrations.size());
@@ -62,6 +67,9 @@ public class ProcessData {
         }
 
         logInOuts = logsTmp;
+
+        //Cleaning data from registrations
+
         System.out.println("Cleaned logs: " +  logsTmp.size());
         System.out.println("Game sessions: " + gameSessions.size());
 
@@ -144,14 +152,22 @@ public class ProcessData {
                         String name = jsonNodeChild.get("name").asText();
                         String device_os = jsonNodeChild.get("device_os").asText();
                         String marketing_campaign = jsonNodeChild.get("marketing_campaign").asText();
-                        Registration registration = new Registration(event_id, event_timestamp, event_type, user_id, country, name, device_os, marketing_campaign);
-                        registrations.add(registration);
+                        if(countries.contains(country)){
+                            Registration registration = new Registration(event_id, event_timestamp, event_type, user_id, country, name, device_os, marketing_campaign);
+                            registrations.add(registration);
+                            //deleting unknown countries
+                        }
+
                     }
                     else if(jsonNode.get("event_type").asText().equals("transaction")){
-                        float transaction_amount = (float) jsonNodeChild.get("transaction_amount").asDouble();
+                        double transaction_amount = jsonNodeChild.get("transaction_amount").asDouble();
                         String transaction_currency = jsonNodeChild.get("transaction_currency").asText();
-                        TransactionEvent transaction = new TransactionEvent(event_id, event_timestamp, event_type, user_id, transaction_amount, transaction_currency);
-                        transactions.add(transaction);
+                        if(transaction_amounts.contains(transaction_amount)){
+                            TransactionEvent transaction = new TransactionEvent(event_id, event_timestamp, event_type, user_id, transaction_amount, transaction_currency);
+                            transactions.add(transaction);
+                            //deleting unvalid transactions
+                        }
+
                     }
                 }
             } catch (IOException e) {
