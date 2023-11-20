@@ -9,10 +9,10 @@ import { environment } from 'src/environments/environment.development';
 })
 export class UserStatsService {
 
-  private readonly apiUrl = environment.userStatsApi
+  private readonly apiUrl = environment.api
 
   constructor(private httpClient: HttpClient) { }
-
+  
   getUserStats(user_id: string): Observable<Registration> {
     return this.httpClient.get<Registration>(`${this.apiUrl}/registrations/${user_id}`)
   }

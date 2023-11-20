@@ -31,3 +31,9 @@ export interface GameSession {
     logOutTime: number,
     user_id: string
 }
+
+export interface Country {
+    country: string,
+    intValue: number,
+    floatValue: number
+}
