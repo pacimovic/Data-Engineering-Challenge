@@ -12,6 +12,19 @@ public class GameSessionService {
     @Inject
     private GameSessionRepository gameSessionRepository;
 
+    public float timeAvg(){
+        return this.gameSessionRepository.timeAvg();
+    }
+    public float timeAvgDate(Integer date1, Integer date2){
+        return this.gameSessionRepository.timeAvgDate(date1, date2);
+    }
+    public List<Country> timeAvgCountry(){
+        return this.gameSessionRepository.timeAvgCountry();
+    }
+    public List<Country> timeAvgCountryDate(Integer date1, Integer date2){
+        return this.gameSessionRepository.timeAvgCountryDate(date1, date2);
+    }
+
     public float sessionsAvg(){
         return this.gameSessionRepository.sessionsAvg();
     }

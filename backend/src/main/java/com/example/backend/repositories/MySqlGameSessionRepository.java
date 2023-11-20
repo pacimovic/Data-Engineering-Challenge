@@ -170,6 +170,165 @@ public class MySqlGameSessionRepository extends MySqlAbstractRepository implemen
 
         return countries;
     }
+    //-----------------------------------------------------------------------------------------------------
+    @Override
+    public float timeAvg() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        float timeAvg = 0;
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT AVG(total_time) AS average_time_spent\n" +
+                    "FROM (\n" +
+                    "    SELECT user_id, SUM(logOutTime - logInTime) AS total_time\n" +
+                    "    FROM sessions\n" +
+                    "    GROUP BY user_id\n" +
+                    "    HAVING SUM(logOutTime - logInTime) > 0\n" +
+                    ") AS user_sessions");
+
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                timeAvg = resultSet.getFloat("average_time_spent");
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return timeAvg;
+    }
+
+    @Override
+    public float timeAvgDate(Integer date1, Integer date2) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        float timeAvg = 0;
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT AVG(total_time) AS average_time_spent\n" +
+                    "FROM (\n" +
+                    "    SELECT user_id, SUM(logOutTime - logInTime) AS total_time\n" +
+                    "    FROM sessions WHERE logInTime >= ? AND logOutTime <= ?\n" +
+                    "    GROUP BY user_id\n" +
+                    "    HAVING SUM(logOutTime - logInTime) > 0\n" +
+                    ") AS user_sessions");
+            preparedStatement.setInt(1, date1);
+            preparedStatement.setInt(2, date2);
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                timeAvg = resultSet.getFloat("average_time_spent");
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return timeAvg;
+    }
+
+    @Override
+    public List<Country> timeAvgCountry() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Country> countries = new ArrayList<>();
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT r.country AS country, AVG(total_time) AS average_time_spent\n" +
+                    "FROM (\n" +
+                    "    SELECT s.user_id, SUM(s.logOutTime - s.logInTime) AS total_time\n" +
+                    "    FROM sessions s\n" +
+                    "    GROUP BY s.user_id\n" +
+                    "    HAVING SUM(s.logOutTime - s.logInTime) > 0\n" +
+                    ") AS user_sessions\n" +
+                    "JOIN registrations r ON user_sessions.user_id = r.user_id\n" +
+                    "GROUP BY r.country;");
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                float sessionsAvg = resultSet.getFloat("average_time_spent");
+                Country country = new Country(countryName, sessionsAvg);
+                countries.add(country);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return countries;
+    }
+
+    @Override
+    public List<Country> timeAvgCountryDate(Integer date1, Integer date2) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Country> countries = new ArrayList<>();
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT r.country AS country, AVG(total_time) AS average_time_spent\n" +
+                    "FROM (\n" +
+                    "    SELECT s.user_id, SUM(s.logOutTime - s.logInTime) AS total_time\n" +
+                    "    FROM sessions s WHERE s.logInTime >= ? AND s.logOutTime <= ?\n" +
+                    "    GROUP BY s.user_id\n" +
+                    "    HAVING SUM(s.logOutTime - s.logInTime) > 0\n" +
+                    ") AS user_sessions\n" +
+                    "JOIN registrations r ON user_sessions.user_id = r.user_id\n" +
+                    "GROUP BY r.country;");
+            preparedStatement.setInt(1, date1);
+            preparedStatement.setInt(2, date2);
+            resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String countryName = resultSet.getString("country");
+                float sessionsAvg = resultSet.getFloat("average_time_spent");
+                Country country = new Country(countryName, sessionsAvg);
+                countries.add(country);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return countries;
+    }
 
     @Override
     public List<GameSession> userGameSessions(String user_id) {
